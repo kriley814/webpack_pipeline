@@ -9,7 +9,7 @@ pipeline {
      echo "Path after: " +"${env.PATH}"
     
     sh 'npm --version'
-   
+   stages { 
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       echo "Prep"
@@ -66,4 +66,5 @@ pipeline {
       echo "Deploy"
       build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
    }
+}
 }
