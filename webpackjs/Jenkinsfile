@@ -1,4 +1,4 @@
-node {
+pipeline {
     
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     
