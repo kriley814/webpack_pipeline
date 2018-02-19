@@ -3,15 +3,18 @@ pipeline {
      environment {
             env.NODEJS_HOME = "${tool 'Node9.x'}"
             env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-        }
-        steps{
-            echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
-            echo "Path before: " + "${env.PATH}"
-            echo "Path after: " +"${env.PATH}"
-            sh 'npm --version'
-        }
+        } 
     
     stages {
+       stage_'Pre-prep'){
+            steps{
+                echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
+                echo "Path before: " + "${env.PATH}"
+                echo "Path after: " +"${env.PATH}"
+                sh 'npm --version'
+            }
+       }
+    
        stage('Preparation') { // for display purposes
           // Get some code from a GitHub repository
           steps{
