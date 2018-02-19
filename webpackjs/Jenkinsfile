@@ -1,17 +1,17 @@
 pipeline {
     agent any
     stages {
-        stage('Definitions') {
-            steps {
-                def env.NODEJS_HOME = "${tool 'Node9.x'}"
-                echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
-                echo "Path before: " + "${env.PATH}"
-                def env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-                echo "Path after: " +"${env.PATH}"
-                sh 'npm --version'
-            }
+        environment {
+            env.NODEJS_HOME = "${tool 'Node9.x'}"
+            env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
         }
-    
+        steps{
+            echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
+            echo "Path before: " + "${env.PATH}"
+            echo "Path after: " +"${env.PATH}"
+            sh 'npm --version'
+        }
+
        stage('Preparation') { // for display purposes
           // Get some code from a GitHub repository
           steps{
