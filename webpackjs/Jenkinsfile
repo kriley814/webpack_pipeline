@@ -1,15 +1,13 @@
 pipeline {
+    agent any
     stages {
         stage('Definitions') {
             steps {
                 env.NODEJS_HOME = "${tool 'Node9.x'}"
-
                 echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
                 echo "Path before: " + "${env.PATH}"
-
                 env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
                 echo "Path after: " +"${env.PATH}"
-
                 sh 'npm --version'
             }
         }
@@ -39,21 +37,19 @@ pipeline {
    
    
        stage('Package') { 
-            catchError {
-                echo '************ZIP FILES HERE******************'   
-
-
-                sh 'rm -f .tmp/*.zip'
-                zip zipFile: '.tmp/jn.zip', dir: './'
-
-                // Install dependencies
-
-                sh 'pwd'
-                dir ('webpackjs') { 
-                    sh('npm install')
-                    sh('npm run build')
-                    sh('ls -l ./dist')
-                }   
+            steps {
+                catchError {
+                    echo '************ZIP FILES HERE******************'   
+                    sh 'rm -f .tmp/*.zip'
+                    zip zipFile: '.tmp/jn.zip', dir: './'
+                    // Install dependencies
+                    sh 'pwd'
+                    dir ('webpackjs') { 
+                        sh('npm install')
+                        sh('npm run build')
+                        sh('ls -l ./dist')
+                    }   
+                }
             }
         }
     
