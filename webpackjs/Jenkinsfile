@@ -24,14 +24,16 @@ pipeline {
        }
    
        stage('Analysis') { 
-            withSonarQubeEnv('My SonarQube Server') { 
-                //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
-                sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar/bin/sonar-scanner ' +
-                '-Dsonar.host.url=http://10.0.1.162:9000 ' +
-                '-Dsonar.projectKey=webpackjs ' +
-                '-Dsonar.language=js ' +
-                '-Dsonar.sources=webpackjs/src '
+            steps {
+                withSonarQubeEnv('My SonarQube Server') { 
+                    //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
+                    sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar/bin/sonar-scanner ' +
+                    '-Dsonar.host.url=http://10.0.1.162:9000 ' +
+                    '-Dsonar.projectKey=webpackjs ' +
+                    '-Dsonar.language=js ' +
+                    '-Dsonar.sources=webpackjs/src '
+                }
             }
          }
    
@@ -56,21 +58,25 @@ pipeline {
         }
     
        stage('Publish') {
-          echo "Publish"
-          // need to have a .npmrc file that includes the following
-          //registry=http://10.0.1.173:8081/repository/jeffnat/
-          //_auth="YWRtaW46YWRtaW4xMjM="
-          //email=admin@example.org
-          //
-          sh 'pwd'
-                dir ('webpackjs') { 
-                    sh('npm publish')
-                } 
+          steps {
+              echo "Publish"
+              // need to have a .npmrc file that includes the following
+              //registry=http://10.0.1.173:8081/repository/jeffnat/
+              //_auth="YWRtaW46YWRtaW4xMjM="
+              //email=admin@example.org
+              //
+              sh 'pwd'
+                    dir ('webpackjs') { 
+                        sh('npm publish')
+                    } 
+            }
        }
    
        stage('Deploy'){
-          echo "Deploy"
-          build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
+          steps{
+              echo "Deploy"
+              build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
+          }
        }
     }
 }
