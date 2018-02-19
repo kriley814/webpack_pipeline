@@ -1,0 +1,69 @@
+node {
+    
+    env.NODEJS_HOME = "${tool 'Node9.x'}"
+    
+    echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
+    echo "Path before: " + "${env.PATH}"
+    
+    env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+     echo "Path after: " +"${env.PATH}"
+    
+    sh 'npm --version'
+   
+   stage('Preparation') { // for display purposes
+      // Get some code from a GitHub repository
+      echo "Prep"
+      git 'https://github.com/kriley814/webpack_pipeline'
+      
+   }
+   
+   stage('Analysis') { 
+        withSonarQubeEnv('My SonarQube Server') { 
+            //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
+            sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar/bin/sonar-scanner ' +
+            '-Dsonar.host.url=http://10.0.1.162:9000 ' +
+            '-Dsonar.projectKey=webpackjs ' +
+            '-Dsonar.language=js ' +
+            '-Dsonar.sources=webpackjs/src '
+        }
+     }
+   
+   
+   stage('Package') { 
+        catchError {
+            echo '************ZIP FILES HERE******************'   
+          
+            
+            sh 'rm -f .tmp/*.zip'
+            zip zipFile: '.tmp/jn.zip', dir: './'
+        
+            // Install dependencies
+            
+            sh 'pwd'
+            dir ('webpackjs') { 
+                sh('npm install')
+                sh('npm run build')
+                sh('ls -l ./dist')
+            }   
+        }
+    }
+    
+   stage('Publish') {
+      echo "Publish"
+      // need to have a .npmrc file that includes the following
+      //registry=http://10.0.1.173:8081/repository/jeffnat/
+      //_auth="YWRtaW46YWRtaW4xMjM="
+      //email=admin@example.org
+      //
+      sh 'pwd'
+            dir ('webpackjs') { 
+                sh('npm publish')
+            } 
+   }
+   
+   stage('Deploy'){
+      echo "Deploy"
+      build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
+   }
+}
