@@ -12,8 +12,10 @@ pipeline {
    stages { 
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
-      echo "Prep"
-      git 'https://github.com/kriley814/webpack_pipeline'
+      steps{
+        echo "Prep"
+        git 'https://github.com/kriley814/webpack_pipeline'
+       }
       
    }
    
