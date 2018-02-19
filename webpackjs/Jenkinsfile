@@ -6,7 +6,7 @@ pipeline {
         } 
     
     stages {
-       stage_'Pre-prep'){
+       stage('Pre-prep'){
             steps{
                 echo "NODEJS Home: " +  "${env.NODEJS_HOME}"
                 echo "Path before: " + "${env.PATH}"
