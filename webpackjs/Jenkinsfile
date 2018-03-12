@@ -1,4 +1,10 @@
 node {
+
+    def registry = 'http://10.10.100.126:8081/repository/jeffnat/'
+    def scanner = 'http://10.10.100.126:9000'
+    def artifact = 'ng-home-0.0.1.tgz'
+    def deployHost = '10.10.100.126'
+
      
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
@@ -39,11 +45,11 @@ try {
                 withSonarQubeEnv('My SonarQube Server') { 
                     //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
-                    sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar/bin/sonar-scanner ' +
-                    '-Dsonar.host.url=http://10.0.1.162:9000 ' +
-                    '-Dsonar.projectKey=webpackjs ' +
-                    '-Dsonar.language=js ' +
-                    '-Dsonar.sources=webpackjs/src '
+                    sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner ' +
+            '-Dsonar.host.url=' + "${scanner}" + ' '
+            '-Dsonar.projectKey=ng-home-pipeline ' +
+            '-Dsonar.language=ts ' +
+            '-Dsonar.sources=src '
                 }
             
          }
@@ -82,9 +88,8 @@ try {
        }
    
        stage('Deploy'){
-          
               echo "Deploy"
-              build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
+              build job: 'kims_deploy_pipeline', parameters: [string(name: 'registry', value: "${registry}"),string(name: 'artifact', value: "${artifact}"),string(name: 'deployHost', value: "${deployHost}")], propagate: true, wait: true
           
        }
 }
