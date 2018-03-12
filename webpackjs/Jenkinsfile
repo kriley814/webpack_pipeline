@@ -57,7 +57,7 @@ try {
                     zip zipFile: '.tmp/jn.zip', dir: './'
                     // Install dependencies
                     sh 'pwd'
-                    dir (A'webpackjs'){
+                    dir ('webpackjs'){
                         sh 'pwd'
                         sh('npm install')
                         sh('npm run build')
