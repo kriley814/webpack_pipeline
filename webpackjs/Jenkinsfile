@@ -77,7 +77,7 @@ try {
               //email=admin@example.org
               //
               sh 'pwd'
-              //sh 'npm publish --registry ' + "${registry}"
+              sh 'npm publish --registry ' + "${registry}"
             
        }
    
