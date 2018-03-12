@@ -37,7 +37,7 @@ try {
 }
    
        stage('Analysis') { 
-            steps {
+            
                 withSonarQubeEnv('My SonarQube Server') { 
                     //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
@@ -47,12 +47,12 @@ try {
                     '-Dsonar.language=js ' +
                     '-Dsonar.sources=webpackjs/src '
                 }
-            }
+            
          }
    
    
        stage('Package') { 
-            steps {
+            
                 catchError {
                     echo '************ZIP FILES HERE******************'   
                     sh 'rm -f .tmp/*.zip'
@@ -65,11 +65,11 @@ try {
                         sh('ls -l ./dist')
                     }   
                 }
-            }
+            
         }
     
        stage('Publish') {
-          steps {
+          
               echo "Publish"
               // need to have a .npmrc file that includes the following
               //registry=http://10.0.1.173:8081/repository/jeffnat/
@@ -80,13 +80,13 @@ try {
                     dir ('webpackjs') { 
                         sh('npm publish')
                     } 
-            }
+            
        }
    
        stage('Deploy'){
-          steps{
+          
               echo "Deploy"
               build job: 'kims_deploy_pipeline', parameters: [string(name: 'host', value: '10.0.1.199')], propagate: true, wait: true
-          }
+          
        }
 }
