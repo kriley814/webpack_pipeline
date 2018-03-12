@@ -13,6 +13,7 @@ try {
    stage('Preparation') { 
       // Get some code from a GitHub repository
         echo "Prep"
+        sh 'pw'
         checkout scm
    }  
    
