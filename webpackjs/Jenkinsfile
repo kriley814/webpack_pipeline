@@ -33,8 +33,6 @@ try {
         }
         echo 'This will always run'
     }
-
-}
    
        stage('Analysis') { 
             
