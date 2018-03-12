@@ -40,6 +40,7 @@ try {
         echo 'This will always run'
     }
    
+       /*
        stage('Analysis') { 
             
                 withSonarQubeEnv('My SonarQube Server') { 
@@ -92,4 +93,5 @@ try {
               build job: 'kims_deploy_pipeline', parameters: [string(name: 'registry', value: "${registry}"),string(name: 'artifact', value: "${artifact}"),string(name: 'deployHost', value: "${deployHost}")], propagate: true, wait: true
           
        }
+       */
 }
