@@ -72,8 +72,8 @@ try {
               //_auth="YWRtaW46YWRtaW4xMjM="
               //email=admin@example.org
               //
-              sh 'pwd'     
-              sh('npm publish')
+              sh 'pwd'
+              sh 'cd webpackjs'
               sh 'npm publish --registry ' + "${registry}"
             
        }
