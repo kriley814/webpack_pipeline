@@ -8,7 +8,9 @@ try {
       // Get some code from a GitHub repository
         echo "Prep"
         checkout scm
-   } catch(e) {
+   }  
+   
+} catch(e) {
     currentBuild.result = "FAILURE"
     echo 'Preparation stage failed'
 
