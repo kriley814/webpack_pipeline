@@ -57,11 +57,9 @@ try {
                     zip zipFile: '.tmp/jn.zip', dir: './'
                     // Install dependencies
                     sh 'pwd'
-                    dir ('webpackjs') { 
-                        sh('npm install')
-                        sh('npm run build')
-                        sh('ls -l ./dist')
-                    }   
+                    sh('npm install')
+                    sh('npm run build')
+                    sh 'ls -l ./dist'
                 }
             
         }
@@ -74,10 +72,9 @@ try {
               //_auth="YWRtaW46YWRtaW4xMjM="
               //email=admin@example.org
               //
-              sh 'pwd'
-                    dir ('webpackjs') { 
-                        sh('npm publish')
-                    } 
+              sh 'pwd'     
+              sh('npm publish')
+              sh 'npm publish --registry ' + "${registry}"
             
        }
    
