@@ -15,7 +15,7 @@ try {
       // Get some code from a GitHub repository
         notifyBuild('STARTED')
         echo "***Prep***"
-        sh 'pw'
+        sh 'pwd'
         checkout scm
    }  
    
