@@ -1,3 +1,4 @@
+try {
 node {
 
     def registry = 'http://10.10.100.126:8081/repository/jeffnat/'
@@ -11,8 +12,8 @@ node {
     
     notifyBuild('STARTED', "${env.JOB_NAME}")     
 
-try {
-   stages{
+
+   
         
         stage('Preparation') { 
         stage='Preparation'
@@ -32,7 +33,7 @@ try {
             sh 'rm -f .tmp/*.zip'
             zip zipFile: '.tmp/jn.zip', dir: './'
             }
-   }
+        } 
 } catch(e) {
         echo '*** ${stage} stage failed ***'
         currentBuild.result = "FAILURE"
@@ -46,7 +47,6 @@ try {
         notifyBuild(currentBuild.result, "${stage}")
         echo 'This will always run'
     }
-} 
 
 def notifyBuild(String buildStatus = 'STARTED', String stage="${stage}") {
     // build status of null means successful
