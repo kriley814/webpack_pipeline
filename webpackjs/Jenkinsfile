@@ -25,7 +25,7 @@ node {
           {          
             stage='Package'
             echo '************ZIP FILES HERE******************'   
-            sh 'r -f .tmp/*.zip'
+            sh 'rm -f .tmp/*.zip'
             zip zipFile: '.tmp/jn.zip', dir: './'
             }
         } 
