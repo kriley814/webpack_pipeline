@@ -5,7 +5,7 @@ node {
     def scanner = 'http://10.10.100.126:9000'
     def artifact = 'ng-home-0.0.1.tgz'
     def deployHost = '10.10.100.126'
-    def stage = ""
+    
 
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
