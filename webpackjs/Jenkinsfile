@@ -7,74 +7,30 @@ node {
 
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-     
     
-    try {
-        stage('Preparation') { 
+    notifyBuild('STARTED', ${env.JOB_NAME})     
+
+try {
+   stages{
+        def stage='Preparation'
+        stage(${stage}) { 
             // Get some code from a GitHub repository
-            notifyBuild('STARTED')
+            
             echo "*** Preparation Stage ***"
             sh 'pwd '
             checkout scm
         }  
-
-    } catch(e) {
-        echo '*** Preparation stage failed ***'
-        currentBuild.result = "FAILURE"
-
-
-        // Since we're catching the exception in order to report on it,
-        // we need to re-throw it, to ensure that the build is marked as failed
-
-        throw e
-
-    } finally {
-        notifyBuild(currentBuild.result)
-        echo 'This will always run'
-    }
-   
-    /*
-    try {
-        stage('Analysis') { 
-            withSonarQubeEnv('My SonarQube Server') { 
-                //def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                //sh '${sonarqubeScannerHome}/bin/sonar-scanner ' +
-                sh '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner ' + '-Dsonar.host.url=' + "${scanner}" + ' ' '-Dsonar.projectKey=ng-home-pipeline ' + '-Dsonar.language=ts ' + '-Dsonar.sources=src '
-            }
-        }
-    } catch(e) {
-        echo '*** Analysis stage failed ***'
-        currentBuild.result = "FAILURE"
-
-
-        // Since we're catching the exception in order to report on it,
-        // we need to re-throw it, to ensure that the build is marked as failed
-
-        throw e
-
-    } finally {
-        notifyBuild(currentBuild.result)
-        echo 'This will always run'
-    }
-   
-    try {
-        stage('Package') {  
+    
+          stage='Package'
+          stage(${stage}) {  
             echo '************ZIP FILES HERE******************'   
             sh 'rm -f .tmp/*.zip'
             zip zipFile: '.tmp/jn.zip', dir: './'
-            // Install dependencies
-            sh 'pwd'
-            dir ('webpackjs'){
-                sh 'pwd'
-                sh('npm install')
-                sh('npm run build')
-                sh 'ls -l ./dist'    
-            }
         }
-     } catch(e) {
-        echo '*** Package stage failed ***'
+   }
+} catch(e) {
+        echo '*** ${stage} stage failed ***'
         currentBuild.result = "FAILURE"
-
 
         // Since we're catching the exception in order to report on it,
         // we need to re-throw it, to ensure that the build is marked as failed
@@ -82,58 +38,12 @@ node {
         throw e
 
     } finally {
-        notifyBuild(currentBuild.result)
+        notifyBuild(currentBuild.result, ${stage})
         echo 'This will always run'
     }
- 
-    try {
-        stage('Publish') {
-            echo "Publish"
-            // need to have a .npmrc file that includes the following
-            //registry=http://10.0.1.173:8081/repository/jeffnat/
-            //_auth="YWRtaW46YWRtaW4xMjM="
-            //email=admin@example.org
-            //
-            sh 'pwd'
-            sh 'npm publish --registry ' + "${registry}"   
-        }
-    } catch(e) {
-        echo '*** Publish stage failed ***'
-        currentBuild.result = "FAILURE"
+} 
 
-
-        // Since we're catching the exception in order to report on it,
-        // we need to re-throw it, to ensure that the build is marked as failed
-
-        throw e
-
-    } finally {
-        notifyBuild(currentBuild.result)
-        echo 'This will always run'
-    }
-
-    try{
-        stage('Deploy'){
-            echo "Deploy"
-            build job: 'kims_deploy_pipeline', parameters: [string(name: 'registry', value: "${registry}"),string(name: 'artifact', value: "${artifact}"),string(name: 'deployHost', value: "${deployHost}")], propagate: true, wait: true
-        }
-    } catch(e) {
-        echo '*** Deploy stage failed ***'
-        currentBuild.result = "FAILURE"
-
-
-        // Since we're catching the exception in order to report on it,
-        // we need to re-throw it, to ensure that the build is marked as failed
-
-        throw e
-
-    } finally {
-        notifyBuild(currentBuild.result)
-        echo 'This will always run'
-    } */
-}
-
-def notifyBuild(String buildStatus = 'STARTED') {
+def notifyBuild(String buildStatus = 'STARTED', String stage=${stage}) {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
  
@@ -172,4 +82,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
         to: '$DEFAULT_RECIPIENTS'
         //recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
-}
+} 
+
+ 
+ 
