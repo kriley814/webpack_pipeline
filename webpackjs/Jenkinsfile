@@ -17,7 +17,7 @@ node {
             // Get some code from a GitHub repository
             
             echo "*** Preparation Stage ***"
-            s 'pwd'
+            sh 'pw'
             checkout scm
         }  
           
