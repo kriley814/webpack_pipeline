@@ -8,12 +8,12 @@ node {
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     
-    notifyBuild('STARTED', ${env.JOB_NAME})     
+    notifyBuild('STARTED', "${env.JOB_NAME}")     
 
 try {
    stages{
         def stage='Preparation'
-        stage(${stage}) { 
+        stage("${stage}") { 
             // Get some code from a GitHub repository
             
             echo "*** Preparation Stage ***"
@@ -22,7 +22,7 @@ try {
         }  
     
           stage='Package'
-          stage(${stage}) {  
+          stage("${stage}") {  
             echo '************ZIP FILES HERE******************'   
             sh 'rm -f .tmp/*.zip'
             zip zipFile: '.tmp/jn.zip', dir: './'
@@ -38,12 +38,12 @@ try {
         throw e
 
     } finally {
-        notifyBuild(currentBuild.result, ${stage})
+        notifyBuild(currentBuild.result, "${stage}")
         echo 'This will always run'
     }
 } 
 
-def notifyBuild(String buildStatus = 'STARTED', String stage=${stage}) {
+def notifyBuild(String buildStatus = 'STARTED', String stage="${stage}") {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
  
