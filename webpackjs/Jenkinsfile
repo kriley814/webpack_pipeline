@@ -26,8 +26,7 @@ node {
     
           
           stage('Package')
-          {  
-            
+          {          
             stage='Package'
             echo '************ZIP FILES HERE******************'   
             sh 'rm -f .tmp/*.zip'
@@ -35,7 +34,7 @@ node {
             }
         } 
 } catch(e) {
-        echo '*** "${stage}" stage failed ***'
+        echo "${stage}" 
         currentBuild.result = "FAILURE"
 
         // Since we're catching the exception in order to report on it,
