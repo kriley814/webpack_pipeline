@@ -15,7 +15,7 @@ try {
    stage('Preparation') { 
       // Get some code from a GitHub repository
         echo "Prep"
-        echo ${env.STAGE_NAME}
+        echo "${env.STAGE_NAME}"
         sh 'pw'
         checkout scm
    }  
