@@ -10,11 +10,8 @@ node {
     env.NODEJS_HOME = "${tool 'Node9.x'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     
-    notifyBuild('STARTED', "${env.JOB_NAME}")     
+    notifyBuild('STARTED')     
 
-
-   
-        
         stage('Preparation') { 
         stage='Preparation'
             // Get some code from a GitHub repository
@@ -23,7 +20,6 @@ node {
             sh 'pwd'
             checkout scm
         }  
-    
           
           stage('Package')
           {          
