@@ -1,6 +1,5 @@
-try {
 node {
-
+try {
     def registry = 'http://10.10.100.126:8081/repository/jeffnat/'
     def scanner = 'http://10.10.100.126:9000'
     def artifact = 'ng-home-0.0.1.tgz'
