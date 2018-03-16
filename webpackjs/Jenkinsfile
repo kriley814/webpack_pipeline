@@ -16,7 +16,7 @@ try {
             // Get some code from a GitHub repository
             
             echo "*** Preparation Stage ***"
-            sh 'pw'
+            sh 'pwd'
             checkout scm
         }  
           
@@ -24,7 +24,7 @@ try {
           {          
             stage='Package'
             echo '************ZIP FILES HERE******************'   
-            sh 'rm -f .tmp/*.zip'
+            sh 'r -f .tmp/*.zip'
             zip zipFile: '.tmp/jn.zip', dir: './'
             }
 } catch(e) {
