@@ -29,15 +29,12 @@ try {
             // Install dependencies
 
             sh 'pwd'
-            sh 'npm config list'
             sh 'npm install'
-            sh 'ng build --prod'
-            sh 'ls -l ./dist'
+            sh 'npm run build'
         }
 
         stage('Publish'){
             stage='Publish'
-            //sh 'npm publish --registry ' + "${registry}"
             sh 'npm publish'
         }
 
