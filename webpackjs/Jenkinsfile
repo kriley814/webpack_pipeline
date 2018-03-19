@@ -1,0 +1,87 @@
+node {
+try {
+    def registry = 'http://10.10.100.126:8081/repository/jeffnat/'
+    def scanner = 'http://10.10.100.126:9000'
+    def artifact = 'ng-home-0.0.1.tgz'
+    def deployHost = '10.10.100.126'
+    
+
+    env.NODEJS_HOME = "${tool 'Node9.x'}"
+    env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+    
+    notifyBuild('STARTED', "")     
+
+        stage('Preparation') { 
+        stage='Preparation'
+            // Get some code from a GitHub repository
+            
+            echo "*** Preparation Stage ***"
+            sh 'pwd'
+            checkout scm
+        }  
+          
+          stage('Package')
+          {          
+            stage='Package'
+            echo '************ZIP FILES HERE******************'   
+            sh 'rm -f .tmp/*.zip'
+            zip zipFile: '.tmp/jn.zip', dir: './'
+            }
+} catch(e) {
+        echo "${stage}" 
+        currentBuild.result = "FAILURE"
+
+        // Since we're catching the exception in order to report on it,
+        // we need to re-throw it, to ensure that the build is marked as failed
+
+        throw e
+
+    } finally {
+        notifyBuild(currentBuild.result, "${stage}")
+        echo 'This will always run'
+    }
+}
+
+def notifyBuild(String buildStatus = 'STARTED', String stage="${stage}") {
+    // build status of null means successful
+    buildStatus =  buildStatus ?: 'SUCCESSFUL'
+ 
+    // Default color values
+    def colorName = 'RED'
+    def colorCode = '#FF0000'
+    
+    echo "Build status: ${buildStatus}"
+    
+    // Override default values based on build status
+    if (buildStatus == 'STARTED') {
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
+    } else if (buildStatus == 'SUCCESSFUL') {
+        color = 'GREEN'
+        colorCode = '#00FF00'
+    } else {
+        color = 'RED'
+        colorCode = '#FF0000'
+    }
+    
+    // Default email values
+    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "${subject} (${env.BUILD_URL})"
+    def details = """<p style="color:${colorCode}" >*** ${buildStatus} ***</p> <p>Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]</p> <p>Stage: ${stage}</p>
+     <p>Check console output at <a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>.</p>"""
+ 
+    // Send notifications
+    //slackSend (color: colorCode, message: summary)
+ 
+    //hipchatSend (color: color, notify: true, message: summary)
+ 
+    emailext (
+        subject: subject,
+        body: details,
+        to: '$DEFAULT_RECIPIENTS'
+        //recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+    )
+} 
+
+ 
+ 
