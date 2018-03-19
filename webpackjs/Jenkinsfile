@@ -32,8 +32,7 @@ try {
 
         stage('Publish'){
             stage='Publish'
-            sh 'cd webpackjs'
-            sh 'npm publish'
+            sh 'cd webpackjs;npm publish'
         }
 
 
