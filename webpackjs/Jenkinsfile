@@ -29,12 +29,14 @@ try {
             // Install dependencies
 
             sh 'pwd'
+            sh 'cd webpackjs'
             sh 'npm install'
             sh 'npm run build'
         }
 
         stage('Publish'){
             stage='Publish'
+            sh 'cd webpackjs'
             sh 'npm publish'
         }
 
