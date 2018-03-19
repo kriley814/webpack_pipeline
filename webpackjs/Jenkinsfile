@@ -1,6 +1,5 @@
 node {
 try {
-    def registry = 'http://10.10.100.126:8081/repository/jeffnat/'
     def scanner = 'http://10.10.100.126:9000'
     def artifact = 'ng-home-0.0.1.tgz'
     def deployHost = '10.10.100.126'
@@ -28,10 +27,7 @@ try {
 
             // Install dependencies
 
-            sh 'pwd'
-            sh 'cd webpackjs'
-            sh 'npm install'
-            sh 'npm run build'
+            sh 'pwd;cd webpackjs;npm install;npm run build'
         }
 
         stage('Publish'){
